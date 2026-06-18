@@ -46,8 +46,9 @@
             background-color: transparent;
             width: 280px;
             height: 280px;
-            perspective: 1000px; /* Efeito 3D */
-            margin: 20px; /* Garante a separacao fisica entre os cards */
+            perspective: 1000px; 
+            -webkit-perspective: 1000px;
+            margin: 20px; 
         }
 
         .flashcard-interno {
@@ -55,24 +56,27 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.8s;
+            transition: transform 0.8s ease;
             transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
             border: 4px solid #00FFCC;
             border-radius: 10px;
         }
 
-        /* Giro de 360 graus no hover ou focus dentro do card */
+        /* Giro completo de 360 graus no hover ou focus */
         .flashcard:hover .flashcard-interno,
         .flashcard:focus-within .flashcard-interno {
             transform: rotateY(360deg);
+            -webkit-transform: rotateY(360deg);
         }
 
-        /* Faces do Card */
+        /* Faces do Card com correcoes de renderizacao */
         .face-frente, .face-verso {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* Esconde o outro lado durante o giro */
+            backface-visibility: hidden; 
+            -webkit-backface-visibility: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -80,12 +84,16 @@
             padding: 20px;
             box-sizing: border-box;
             border-radius: 6px;
+            top: 0;
+            left: 0;
         }
 
         /* Estilo da Frente */
         .face-frente {
             background-color: #1E1E1E;
             color: #00FFCC;
+            transform: rotateY(0deg);
+            -webkit-transform: rotateY(0deg);
         }
 
         .face-frente h2 {
@@ -93,11 +101,12 @@
             margin: 0;
         }
 
-        /* Estilo do Verso */
+        /* Estilo do Verso ajustado para evitar erros de inversao */
         .face-verso {
             background-color: #00FFCC;
             color: #121212;
-            transform: rotateY(360deg); /* Mantem a leitura correta apos girar */
+            transform: rotateY(180deg); 
+            -webkit-transform: rotateY(180deg);
         }
 
         .face-verso p {
@@ -123,4 +132,48 @@
         <div class="flashcard" tabindex="0" aria-label="Card um: Contraste">
             <div class="flashcard-interno">
                 <div class="face-frente">
-                    <h2>Contraste
+                    <h2>Contraste</h2>
+                </div>
+                <div class="face-verso">
+                    <p>Use textos claros sobre fundos escuros ou textos escuros sobre fundos muito claros.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" tabindex="0" aria-label="Card dois: Tamanho da Fonte">
+            <div class="flashcard-interno">
+                <div class="face-frente">
+                    <h2>Tamanho da Fonte</h2>
+                </div>
+                <div class="face-verso">
+                    <p>Permita que o texto seja ampliado sem quebrar a estrutura da pagina web.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" tabindex="0" aria-label="Card tres: Fontes Sem Serifa">
+            <div class="flashcard-interno">
+                <div class="face-frente">
+                    <h2>Fontes Sem Serifa</h2>
+                </div>
+                <div class="face-verso">
+                    <p>Fontes como Arial e Helvetica sao mais faceis de ler do que fontes com detalhes.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" tabindex="0" aria-label="Card quatro: Navegacao">
+            <div class="flashcard-interno">
+                <div class="face-frente">
+                    <h2>Navegacao</h2>
+                </div>
+                <div class="face-verso">
+                    <p>O site deve ser totalmente navegavel usando apenas as teclas do teclado.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
