@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards de Acessibilidade Web</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+        }
+
+        /* Container do Flashcard com efeito de rotação (Flip) */
+        .card-container {
+            width: 350px;
+            height: 250px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        /* Classe que aplica a rotação */
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .card-front {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-color);
+        }
+
+        .card-back {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .card-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Controles de Navegação */
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        button:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        #counter {
+            font-weight: bold;
+        }
+
+        .tip {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Acessibilidade Web (a11y)</h1>
+        <p>Aprenda os conceitos fundamentais com Flashcards</p>
+    </header>
+
+    <div class="card-container" onclick="flipCard()" role="button" aria-label="Flashcard. Clique para virar e ver a resposta.">
+        <div class="card" id="flashcard">
+            <div class="card-face card-front">
+                <div class="badge" style="color: var(--primary-color);">Pergunta</div>
+                <div class="card-text" id="question-text">Carregando pergunta...</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="badge" style="color: white;">Resposta</div>
+                <div class="card-text" id="answer-text">Carregando resposta...</div>
+            </div>
+        </div>
+    </div>
+
+    <p class="tip">💡 Dica: Clique no cartão para virar!</p>
+
+    <div class="controls">
+        <button id="prev-btn" onclick="prevCard()">Anterior</button>
+        <span id="counter">1 / 5</span>
+        <button id="next-btn" onclick="nextCard()">Próximo</button>
+    </div>
+
+    <script>
+        // Banco de dados dos flashcards sobre acessibilidade
+        const flashcards = [
+            {
+                question: "O que significa o termo 'a11y'?",
+                answer: "É um numerônimo para 'Accessibility' (Acessibilidade). O número 11 representa a quantidade de letras entre o 'A' e o 'Y'."
+            },
+            {
+                question: "Para que serve o atributo 'alt' nas imagens?",
+                answer: "Serve para fornecer uma descrição textual da imagem para leitores de tela, ajudando usuários com deficiência visual."
+            },
+            {
+                question: "O que é o WCAG?",
+                answer: "Web Content Accessibility Guidelines. É o principal conjunto de diretrizes e padrões internacionais de acessibilidade para a web."
+            },
+            {
+                question: "Por que não devemos guiar ações apenas por cores (ex: 'clique no botão verde')?",
+                answer: "Porque usuários daltônicos ou com baixa visão podem não conseguir distinguir as cores, perdendo a instrução."
+            },
+            {
+                question: "Qual a importância da navegação por teclado?",
+                answer: "Permite que pessoas com deficiências motoras, que não usam o mouse, naveguem pelo site usando apenas a tecla Tab, Enter e setas."
+            }
+        ];
+
+        let currentIndex = 0;
+        const cardElement = document.getElementById('flashcard');
+        const questionText = document.getElementById('question-text');
+        const answerText = document.getElementById('answer-text');
+        const counterElement = document.getElementById('counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Função para alternar o lado do cartão
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // Função para atualizar o conteúdo do cartão na tela
+        function updateCard() {
+            // Remove a animação de virado para garantir que comece pela frente
+            cardElement.classList.remove('flipped');
+            
+            // Pequeno delay para mudar o texto enquanto o card desvira (melhora o visual)
+            setTimeout(() => {
+                questionText.textContent = flashcards[currentIndex].question;
+                answerText.textContent = flashcards[currentIndex].answer;
+                counterElement.textContent = `${currentIndex + 1} / ${flashcards.length}`;
+                
+                // Controle de ativação dos botões
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === flashcards.length - 1;
+            }, 150);
+        }
+
+        // Avançar card
+        function nextCard() {
+            if (currentIndex < flashcards.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        }
+
+        // Voltar card
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        }
+
+        // Inicializa o primeiro card ao carregar a página
+        updateCard();
+    </script>
+</body>
+</html>
