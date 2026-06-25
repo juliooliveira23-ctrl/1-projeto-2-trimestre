@@ -1,179 +1,165 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acessibilidade para Baixa Visao</title>
-    <style>
-        /* Configuracoes Gerais para Baixa Visao - Alto Contraste */
-        body {
-            background-color: #121212;
-            color: #FFFFFF;
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Cards Acessibilidade</title>
 
-        h1 {
-            font-size: 2.5rem;
-            color: #00FFCC;
-            text-align: center;
-            margin-bottom: 10px;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        p.instrucao {
-            font-size: 1.4rem;
-            color: #FFFF00;
-            text-align: center;
-            margin-bottom: 40px;
-        }
+body{
+    min-height:100vh;
+    background:#111;
+    font-family:Arial, sans-serif;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-evenly;
+    align-items:center;
+    gap:20px;
+    padding:20px;
+}
 
-        /* Container que organiza os cards separados na tela */
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            max-width: 1300px;
-            width: 100%;
-        }
+.flash-card{
+    width:180px;
+    height:180px;
+    perspective:1000px;
+}
 
-        /* Estrutura de cada Flashcard com espacamento isolado */
-        .flashcard {
-            background-color: transparent;
-            width: 280px;
-            height: 280px;
-            perspective: 1000px; 
-            -webkit-perspective: 1000px;
-            margin: 20px; 
-        }
+.card{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform 1s ease;
+    cursor:pointer;
+}
 
-        .flashcard-interno {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.15s ease;
-            transform-style: preserve-3d;
-            -webkit-transform-style: preserve-3d;
-            border: 4px solid #00FFCC;
-            border-radius: 10px;
-        }
+.card.flipped{
+    transform:rotateY(180deg);
+}
 
-        /* Giro completo de 180 graus no hover ou focus */
-        .flashcard:hover .flashcard-interno,
-        .flashcard:focus-within .flashcard-interno {
-            transform: rotateY(360deg);
-            -webkit-transform: rotateY(360deg);
-        }
+.face{
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px;
+    font-size:1.3rem;
+    font-weight:bold;
+}
 
-        /* Faces do Card com correcoes de renderizacao */
-        .face-frente, .face-verso {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden; 
-            -webkit-backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            border-radius: 6px;
-            top: 0;
-            left: 0;
-        }
+.front{
+    background:#ffd700;
+    color:#000;
+    border:4px solid #fff;
+}
 
-        /* Estilo da Frente */
-        .face-frente {
-            background-color: #1E1E1E;
-            color: #00FFCC;
-            transform: rotateY(0deg);
-            -webkit-transform: rotateY(0deg);
-        }
+.back{
+    background:#005fcc;
+    color:#fff;
+    transform:rotateY(180deg);
+    border:4px solid #fff;
+}
 
-        .face-frente h2 {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-
-        /* Estilo do Verso ajustado para evitar erros de inversao */
-        .face-verso {
-            background-color: #00FFCC;
-            color: #121212;
-            transform: rotateY(180deg); 
-            -webkit-transform: rotateY(180deg);
-        }
-
-        .face-verso p {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        /* Destaque visual amarelo para acessibilidade via teclado */
-        .flashcard:focus-within .flashcard-interno {
-            border: 6px solid #FFFF00;
-        }
-    </style>
+.card:focus{
+    outline:4px solid #00ff99;
+    outline-offset:4px;
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Dicas de Acessibilidade para Baixa Visao</h1>
-    <p class="instrucao">Passe o mouse ou use o teclado com a tecla Tab para girar o card</p>
+<div class="flash-card">
+    <button class="card" aria-label="Flash card contraste">
+        <div class="face front">Contraste</div>
+        <div class="face back">Visibilidade</div>
+    </button>
+</div>
 
-    <div class="container">
+<div class="flash-card">
+    <button class="card" aria-label="Flash card ampliacao">
+        <div class="face front">Ampliacao</div>
+        <div class="face back">Leitura</div>
+    </button>
+</div>
 
-        <div class="flashcard" tabindex="0" aria-label="Card um: Contraste">
-            <div class="flashcard-interno">
-                <div class="face-frente">
-                    <h2>Contraste</h2>
-                </div>
-                <div class="face-verso">
-                    <p>Use textos claros sobre fundos escuros ou textos escuros sobre fundos muito claros.</p>
-                </div>
-            </div>
-        </div>
+<div class="flash-card">
+    <button class="card" aria-label="Flash card foco">
+        <div class="face front">Foco</div>
+        <div class="face back">Navegacao</div>
+    </button>
+</div>
 
-        <div class="flashcard" tabindex="0" aria-label="Card dois: Tamanho da Fonte">
-            <div class="flashcard-interno">
-                <div class="face-frente">
-                    <h2>Tamanho da Fonte</h2>
-                </div>
-                <div class="face-verso">
-                    <p>Permita que o texto seja ampliado sem quebrar a estrutura da pagina web.</p>
-                </div>
-            </div>
-        </div>
+<div class="flash-card">
+    <button class="card" aria-label="Flash card tamanho">
+        <div class="face front">Texto Grande</div>
+        <div class="face back">Acesso</div>
+    </button>
+</div>
 
-        <div class="flashcard" tabindex="0" aria-label="Card tres: Fontes Sem Serifa">
-            <div class="flashcard-interno">
-                <div class="face-frente">
-                    <h2>Fontes Sem Serifa</h2>
-                </div>
-                <div class="face-verso">
-                    <p>Fontes como Arial e Helvetica sao mais faceis de ler do que fontes com detalhes.</p>
-                </div>
-            </div>
-        </div>
+<div class="flash-card">
+    <button class="card" aria-label="Flash card cores">
+        <div class="face front">Cores</div>
+        <div class="face back">Percepcao</div>
+    </button>
+</div>
 
-        <div class="flashcard" tabindex="0" aria-label="Card quatro: Navegacao">
-            <div class="flashcard-interno">
-                <div class="face-frente">
-                    <h2>Navegacao</h2>
-                </div>
-                <div class="face-verso">
-                    <p>O site deve ser totalmente navegavel usando apenas as teclas do teclado.</p>
-                </div>
-            </div>
-        </div>
+<div class="flash-card">
+    <button class="card" aria-label="Flash card zoom">
+        <div class="face front">Zoom</div>
+        <div class="face back">Detalhes</div>
+    </button>
+</div>
 
-    </div>
+<div class="flash-card">
+    <button class="card" aria-label="Flash card leitor">
+        <div class="face front">Leitor</div>
+        <div class="face back">Apoio</div>
+    </button>
+</div>
+
+<div class="flash-card">
+    <button class="card" aria-label="Flash card teclado">
+        <div class="face front">Teclado</div>
+        <div class="face back">Controle</div>
+    </button>
+</div>
+
+<script>
+const cards = document.querySelectorAll(".card");
+
+cards.forEach(card => {
+    card.addEventListener("click", () => {
+
+        if(card.classList.contains("flipped")) return;
+
+        card.classList.add("flipped");
+
+        setTimeout(() => {
+            card.classList.remove("flipped");
+        }, 3000);
+
+    });
+
+    card.addEventListener("keydown", (event) => {
+        if(event.key === "Enter" || event.key === " "){
+            event.preventDefault();
+            card.click();
+        }
+    });
+});
+</script>
 
 </body>
 </html>
